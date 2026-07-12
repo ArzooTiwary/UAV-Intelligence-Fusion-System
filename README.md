@@ -73,8 +73,8 @@ Output:
 This is the core of the project. Three evidence sources, each expressed as a basic probability assignment over {THREAT, BENIGN, UNKNOWN}, combined pairwise using Dempster's combination rule.
 
 The combination rule:
-- Agreement (both sources pointing the same direction) → reinforces belief
-- Conflict (sources pointing opposite directions) → generates conflict mass K
+- Agreement (both sources pointing the same direction)= reinforces belief
+- Conflict (sources pointing opposite directions)= generates conflict mass K
 - Conflict mass is discarded and the remaining masses are renormalized by 1/(1-K)
 
 The context module is where the system's behaviour becomes genuinely interesting. It outputs a strong BENIGN lean in normal zones during daytime, and a moderate THREAT lean in restricted zones at night. Combined with vision and cyber evidence, this means the same 5-vehicle detection produces a threat score of 0.02 in a normal patrol corridor and 0.95 in a restricted exclusion zone with active GPS anomaly. That context-sensitivity is the property that makes this system research-grade rather than a threshold alert.
