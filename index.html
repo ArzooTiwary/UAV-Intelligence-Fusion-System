@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAV Intelligence Fusion System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #07090f;
+            color: #c9d1d9;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(180deg, #0d1321 0%, #07090f 100%);
+            border-bottom: 1px solid #1a1f2e;
+            padding: 60px 40px 50px;
+            text-align: center;
+        }
+        .header-tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: #3fb950;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .header-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(24px, 4vw, 42px);
+            color: #58a6ff;
+            letter-spacing: 3px;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+        .header-sub {
+            font-size: 15px;
+            color: #8b949e;
+            max-width: 680px;
+            margin: 0 auto 32px;
+        }
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 2px;
+            padding: 12px 28px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.8; }
+        .btn-primary {
+            background: #1f6feb;
+            color: #ffffff;
+            border: 1px solid #1f6feb;
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #58a6ff;
+            border: 1px solid #1f6feb;
+        }
+
+        /* ── LAYOUT ── */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 60px 0;
+            border-bottom: 1px solid #0f1320;
+        }
+
+        .section-tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: #2d4a6e;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #e6edf3;
+            margin-bottom: 16px;
+        }
+        .section-body {
+            font-size: 15px;
+            color: #8b949e;
+            max-width: 720px;
+        }
+
+        /* ── STATS ROW ── */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 40px;
+        }
+        .stat-card {
+            background: #0d1117;
+            border: 1px solid #1a1f2e;
+            border-radius: 6px;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        .stat-value {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 36px;
+            font-weight: 700;
+            color: #58a6ff;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: #484f58;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .stat-sub {
+            font-size: 11px;
+            color: #3d4451;
+            margin-top: 4px;
+        }
+
+        /* ── ARCHITECTURE ── */
+        .arch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 32px;
+        }
+        .arch-card {
+            background: #0d1117;
+            border: 1px solid #1a1f2e;
+            border-left: 3px solid #1f6feb;
+            border-radius: 6px;
+            padding: 20px 22px;
+        }
+        .arch-card.highlight {
+            border-left-color: #f85149;
+        }
+        .arch-num {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: #2d4a6e;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+        .arch-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #e6edf3;
+            margin-bottom: 8px;
+        }
+        .arch-body {
+            font-size: 13px;
+            color: #6e7a91;
+            line-height: 1.6;
+        }
+
+        /* ── RESULTS TABLE ── */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 32px;
+            font-size: 14px;
+        }
+        .results-table th {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: #484f58;
+            text-align: left;
+            padding: 10px 16px;
+            border-bottom: 1px solid #1a1f2e;
+            background: #0d1117;
+        }
+        .results-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #0f1320;
+            color: #8b949e;
+        }
+        .results-table tr:hover td {
+            background: #0d1117;
+        }
+        .val-good  { color: #3fb950; font-family: 'Share Tech Mono', monospace; }
+        .val-warn  { color: #e3b341; font-family: 'Share Tech Mono', monospace; }
+        .val-bad   { color: #f85149; font-family: 'Share Tech Mono', monospace; }
+        .val-blue  { color: #58a6ff; font-family: 'Share Tech Mono', monospace; }
+        .badge-robust  { background:#0a1a0a; border:1px solid #3fb950; color:#3fb950; padding:2px 10px; border-radius:3px; font-size:11px; font-family:'Share Tech Mono',monospace; }
+        .badge-fragile { background:#1a0505; border:1px solid #f85149; color:#f85149; padding:2px 10px; border-radius:3px; font-size:11px; font-family:'Share Tech Mono',monospace; }
+
+        /* ── CONTRIBUTION BOX ── */
+        .contrib-box {
+            background: #0d1117;
+            border: 1px solid #1a1f2e;
+            border-left: 3px solid #e3b341;
+            border-radius: 6px;
+            padding: 24px 28px;
+            margin-top: 32px;
+        }
+        .contrib-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: #e3b341;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+        }
+        .contrib-body {
+            font-size: 14px;
+            color: #8b949e;
+            line-height: 1.8;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            padding: 40px;
+            text-align: center;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: #21262d;
+            letter-spacing: 2px;
+        }
+        footer a { color: #2d4a6e; text-decoration: none; }
+        footer a:hover { color: #58a6ff; }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-tag">BSERC Summer Internship 2026 &nbsp;·&nbsp; SRM Institute of Science and Technology</div>
+    <div class="header-title">UAV INTELLIGENCE<br>FUSION SYSTEM</div>
+    <div class="header-sub">
+        A secure, AI-powered multi-modal platform combining aerial object detection,
+        Extended Kalman Filter state estimation, GPS spoofing detection, and
+        Dempster-Shafer evidence fusion for real-time UAV situational awareness.
+    </div>
+    <div class="btn-row">
+        <a class="btn btn-primary" href="https://uav-intelligence-fusion.streamlit.app" target="_blank">LIVE DEMO</a>
+        <a class="btn btn-secondary" href="https://github.com/ArzooTiwary/UAV-Intelligence-Fusion-System" target="_blank">VIEW ON GITHUB</a>
+    </div>
+</div>
+
+<!-- KEY RESULTS -->
+<section>
+    <div class="container">
+        <div class="section-tag">Research Results</div>
+        <div class="section-title">Key Findings</div>
+        <div class="section-body">
+            Evaluated on the Aissou 2022 GPS spoofing dataset (510,530 samples)
+            containing three distinct attack types across authentic and simulated
+            GPS receiver data.
+        </div>
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value">0.9923</div>
+                <div class="stat-label">ROC-AUC</div>
+                <div class="stat-sub">Binary spoofing detection</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">0.9889</div>
+                <div class="stat-label">Macro AUC</div>
+                <div class="stat-sub">Multi-class attack classification</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">1.00</div>
+                <div class="stat-label">Adv. Recall</div>
+                <div class="stat-sub">After adversarial training</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">510K</div>
+                <div class="stat-label">Samples</div>
+                <div class="stat-sub">Real GPS receiver data</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section>
+    <div class="container">
+        <div class="section-tag">System Design</div>
+        <div class="section-title">Six-Module Architecture</div>
+        <div class="section-body">
+            Each module handles one problem and passes its output to the next.
+            The fusion engine sits above all three sensing layers simultaneously
+            rather than treating cybersecurity as an afterthought.
+        </div>
+        <div class="arch-grid">
+            <div class="arch-card">
+                <div class="arch-num">MODULE 01</div>
+                <div class="arch-title">Visual Intelligence</div>
+                <div class="arch-body">YOLOv8 aerial object detection producing structured counts of vehicles, persons, and boats from UAV imagery.</div>
+            </div>
+            <div class="arch-card">
+                <div class="arch-num">MODULE 02</div>
+                <div class="arch-title">EKF State Estimation</div>
+                <div class="arch-body">Extended Kalman Filter tracking UAV position. The innovation residual — how surprised the filter is by each GPS reading — is the primary anomaly signal.</div>
+            </div>
+            <div class="arch-card">
+                <div class="arch-num">MODULE 03</div>
+                <div class="arch-title">Cyber Anomaly Detection</div>
+                <div class="arch-body">Random Forest classifier trained on real GPS receiver data. Identifies three distinct spoofing attack types. Hardened with adversarial training.</div>
+            </div>
+            <div class="arch-card highlight">
+                <div class="arch-num">MODULE 04 — CORE CONTRIBUTION</div>
+                <div class="arch-title">Dempster-Shafer Fusion</div>
+                <div class="arch-body">Combines vision, cyber, and context evidence into one explainable threat score using formal evidential reasoning. Context-aware: the same detection means different things in different zones.</div>
+            </div>
+            <div class="arch-card">
+                <div class="arch-num">MODULE 05</div>
+                <div class="arch-title">Report Generator</div>
+                <div class="arch-body">Converts structured fusion output into auditable plain-English intelligence reports. Every sentence traces back to a specific input field.</div>
+            </div>
+            <div class="arch-card">
+                <div class="arch-num">MODULE 06</div>
+                <div class="arch-title">Operator Dashboard</div>
+                <div class="arch-body">Streamlit + Plotly ops-center interface with threat gauge, EKF residual timeline, evidence breakdown charts, and live report generation.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ADVERSARIAL RESULTS -->
+<section>
+    <div class="container">
+        <div class="section-tag">Experiment</div>
+        <div class="section-title">Adversarial Robustness</div>
+        <div class="section-body">
+            Standard supervised classifiers for GPS spoofing detection are
+            vulnerable to adversarial inputs — small perturbations that cause
+            misclassification without being detectable in raw telemetry.
+            This experiment quantifies that vulnerability and demonstrates
+            its mitigation through adversarial training.
+        </div>
+
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>ROC-AUC</th>
+                    <th>False Positive Rate</th>
+                    <th>Clean Recall</th>
+                    <th>Recall Under Attack</th>
+                    <th>Verdict</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Standard Random Forest</td>
+                    <td class="val-blue">0.9874</td>
+                    <td class="val-warn">0.0605</td>
+                    <td class="val-good">0.8653</td>
+                    <td class="val-bad">0.2957</td>
+                    <td><span class="badge-fragile">FRAGILE</span></td>
+                </tr>
+                <tr>
+                    <td>Gradient Boosting</td>
+                    <td class="val-blue">0.9923</td>
+                    <td class="val-good">0.0100</td>
+                    <td class="val-good">—</td>
+                    <td class="val-bad">—</td>
+                    <td><span class="badge-fragile">UNTESTED</span></td>
+                </tr>
+                <tr>
+                    <td><strong style="color:#e6edf3">Adversarially Trained RF</strong></td>
+                    <td class="val-blue">0.9875</td>
+                    <td class="val-good">0.0531</td>
+                    <td class="val-good">0.8334</td>
+                    <td class="val-good">1.0000</td>
+                    <td><span class="badge-robust">ROBUST</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="contrib-box">
+            <div class="contrib-title">Finding</div>
+            <div class="contrib-body">
+                Adversarial training restored recall under attack from 0.2957 to 1.0000
+                with negligible impact on ROC-AUC (0.9874 → 0.9875) and a reduction
+                in false positive rate from 6.1% to 5.3%. This is consistent with
+                adversarial machine learning findings in UAV intrusion detection
+                literature and demonstrates that the vulnerability is practically
+                mitigable without sacrificing detection performance.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DATASET -->
+<section>
+    <div class="container">
+        <div class="section-tag">Data</div>
+        <div class="section-title">Dataset</div>
+        <div class="section-body">
+            Trained and evaluated on the Aissou 2022 GPS spoofing dataset
+            (Mendeley Data, DOI: 10.17632/z7dj3yyzt8.3), containing 510,530
+            samples of real GPS receiver measurements across four classes:
+            authentic signals and three distinct spoofing attack types.
+            The dataset contains 13 GPS signal features including carrier-to-noise
+            ratio, Doppler shift, carrier phase, and pseudorange measurements.
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>
+        UAV INTELLIGENCE FUSION SYSTEM &nbsp;·&nbsp;
+        <a href="https://github.com/ArzooTiwary/UAV-Intelligence-Fusion-System">GITHUB</a>
+        &nbsp;·&nbsp;
+        <a href="https://uav-intelligence-fusion.streamlit.app">LIVE DEMO</a>
+        &nbsp;·&nbsp;
+        BSERC INTERNSHIP 2026
+        &nbsp;·&nbsp;
+        SRM INSTITUTE OF SCIENCE AND TECHNOLOGY
+    </p>
+</footer>
+
+</body>
+</html>
