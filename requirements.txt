@@ -1,0 +1,9 @@
+ultralytics
+opencv-python-headless
+scikit-learn
+streamlit
+plotly
+numpy
+pandas
+joblib
+matplotlib
