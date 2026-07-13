@@ -3,8 +3,9 @@ import plotly.graph_objects as go
 import numpy as np
 import sys, os
 from datetime import datetime
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'code'))
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 from module4_fusion import fuse
 from module5_report import generate_report
 from module2_ekf import UAVKalmanFilter
@@ -216,9 +217,65 @@ with st.sidebar:
     st.markdown("**LOCATION**")
     location = st.text_input("loc", value="Sector 4", label_visibility="collapsed")
     st.markdown("**VISION — MODULE 1**")
-    vehicle_count    = st.slider("Vehicles detected",         0, 15, 3)
-    person_count     = st.slider("Persons detected",          0, 15, 1)
-    loitering        = st.checkbox("Loitering detected",      value=False)
+
+    uploaded_image = st.file_uploader(
+        "Upload aerial image (optional)",
+        type=["jpg", "jpeg", "png"],
+        label_visibility="visible"
+    )
+
+    # If image uploaded, run real YOLO detection
+    vision_from_image = None
+    if uploaded_image is not None:
+        import tempfile
+        import os
+        from ultralytics import YOLO
+
+        VEHICLE_CLASSES = {"car", "truck", "bus", "motorcycle", "bicycle"}
+        PEOPLE_CLASSES  = {"person"}
+        BOAT_CLASSES    = {"boat"}
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
+            tmp.write(uploaded_image.read())
+            tmp_path = tmp.name
+
+        try:
+            yolo_model = YOLO("yolov8n.pt")
+            results    = yolo_model.predict(source=tmp_path,
+                                            conf=0.4, verbose=False)
+            result     = results[0]
+            counts     = {"vehicles": 0, "people": 0, "boats": 0}
+
+            if result.boxes is not None:
+                for cls_id in result.boxes.cls.cpu().numpy().astype(int):
+                    name = result.names[cls_id]
+                    if name in VEHICLE_CLASSES:
+                        counts["vehicles"] += 1
+                    elif name in PEOPLE_CLASSES:
+                        counts["people"]   += 1
+                    elif name in BOAT_CLASSES:
+                        counts["boats"]    += 1
+
+            vision_from_image = counts
+            st.image(tmp_path, caption="Uploaded image", use_container_width=True)
+            st.success(f"Detected: {counts['vehicles']} vehicles, "
+                       f"{counts['people']} persons, "
+                       f"{counts['boats']} boats")
+        except Exception as e:
+            st.warning(f"Detection failed: {e}")
+        finally:
+            os.unlink(tmp_path)
+
+    # Use real detection if available, otherwise use sliders
+    if vision_from_image is not None:
+        vehicle_count = vision_from_image["vehicles"]
+        person_count  = vision_from_image["people"]
+        st.markdown("*Counts from image detection — adjust manually if needed*")
+    else:
+        vehicle_count = st.slider("Vehicles detected", 0, 15, 3)
+        person_count  = st.slider("Persons detected",  0, 15, 1)
+
+    loitering = st.checkbox("Loitering detected", value=False)
     st.markdown("**CYBER — MODULE 3**")
     spoof_confidence = st.slider("GPS spoofing confidence",   0.0, 1.0, 0.05, step=0.01)
     st.markdown("**CONTEXT**")
