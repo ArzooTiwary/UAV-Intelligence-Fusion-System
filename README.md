@@ -1,5 +1,6 @@
 # UAV Intelligence Fusion System
 **Live Demo:** https://uav-intelligence-fusion-system.streamlit.app
+
 I started this project with one question that kept bothering me during the literature review phase of my BSERC Summer internship: why does every UAV security paper solve only one problem at a time?
 
 You have excellent work on GPS spoofing detection. Separately, strong work on aerial object detection. Separately again, work on telemetry anomaly classification. But an actual drone in an actual surveillance scenario faces all of these simultaneously, and the operator on the ground needs one answer, not three separate alerts from three separate systems that don't know about each other.
