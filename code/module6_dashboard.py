@@ -230,17 +230,16 @@ with st.sidebar:
         import tempfile
         import os
         from ultralytics import YOLO
-
-        VEHICLE_CLASSES = {"car", "truck", "bus", "motorcycle", "bicycle"}
-        PEOPLE_CLASSES  = {"person"}
-        BOAT_CLASSES    = {"boat"}
+        VEHICLE_CLASSES = {"car", "van", "truck", "bus", "motor", "tricycle", "awning-tricycle"}
+        PEOPLE_CLASSES  = {"pedestrian", "people"}
+        BOAT_CLASSES    = {"bicycle"}
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
             tmp.write(uploaded_image.read())
             tmp_path = tmp.name
 
         try:
-            yolo_model = YOLO("yolov8n.pt")
+            yolo_model = YOLO("models/yolov8n_visdrone.pt")
             results    = yolo_model.predict(source=tmp_path,
                                             conf=0.4, verbose=False)
             result     = results[0]
