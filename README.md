@@ -135,6 +135,26 @@ The obvious extensions, roughly in order of research value:
 4. Extend Module 3 to a CNN+gradient-boosting stacked ensemble for improved robustness
 5. Connect the dashboard to a live video feed and real telemetry stream
 
+## Model Weights
+
+The fine-tuned weights are not in this repository — a 6MB binary file does not 
+belong in version control. To reproduce the fine-tuning from scratch, the 
+Colab notebook is at `code/visdrone_finetune.ipynb`. It takes about two hours 
+on a free T4 GPU. Download `best.pt` when it finishes and place it at 
+`models/yolov8n_visdrone.pt`. If you just want to run the system quickly, 
+remove the model path override in `detect_image.py` and it will fall back to 
+stock `yolov8n.pt` which downloads automatically.
+
+On the VisDrone 2019 detection dataset — 6,471 training images, 548 validation 
+images, 10 aerial-specific classes — fine-tuning for 50 epochs on a Tesla T4 
+brought mAP50 from 0.110 at epoch 1 to 0.298 at convergence, a 171% improvement. 
+Car detection reached mAP50 of 0.723, which makes sense given cars are the most 
+represented and visually consistent class in aerial imagery. The weakest classes 
+were bicycle (0.061) and awning-tricycle (0.103) — both rare in the dataset and 
+visually ambiguous at altitude. This is consistent with findings across the aerial 
+detection literature and points to data augmentation or class-weighted sampling 
+as a natural next step.
+
 ## Important note
 This is a non-weaponized situational awareness and decision support platform. Every output is advisory. The system does not recommend, initiate, or score any offensive or kinetic action. It tells an operator what it sees and how confident it is. The operator decides what to do.
 
